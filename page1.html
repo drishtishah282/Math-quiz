@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Math Quiz</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <style>
+            .form-control {
+                width: 200px;
+                display: inline-block;
+                margin: 0px 0px 10px 0px;
+            }
+            #oper {
+                width: min-content;
+            }
+            #player1name, #player2name {
+                display: inline-block;
+                font-size: 17px;
+                margin: 5px 5px 5px 10px;
+                color: white;
+            }
+            #output {
+                background-color: white;
+                border-radius: 5px;
+                border: 2px solid orange;
+                border-top: 10px solid orange;
+                padding: 15px;
+                float: none;
+                text-align: left;
+            }
+            #player1Name, #player2Name {
+                margin: 8px 0px 8px 15px;
+            }
+        </style>
+    </head>
+    <body class="bg-info text-light">
+        <h4 id="player1Name"></h5>
+        <h4 id="player2Name"></h5>
+        <div class="container-fluid">
+            <center>
+                <h1 class="text-white">Math Quiz</h1>
+                <br>
+                <br>
+                <h3 id="question"></h3>
+                <h3 id="answer"></h3>
+                <br>
+                <div id="output" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div id="outputin" style="display: none;">
+                        <label id="timer" class="text-dark"></label>
+                        <br>
+                        <div class="row" style="margin-left: 0px;">
+                            <h4 id="questionI" class="text-dark"></h4>
+                            &nbsp;&nbsp;
+                            <input type="number" class="form-control" style="width: 150px; display: inline-block;" placeholder="Your Answer..." id="answerg">
+                        </div>
+                        <br>
+                        <center><button onclick="submit()" class="btn btn-warning">Submit</button></center>
+                    </div>
+                        <center>
+                            <div id="end-btn" style="display: none;">
+                                <h3  id="winDiv" class="text-warning" id="winner">Won!</h3>
+                                <br>
+                                <button class="btn btn-warning" onclick="restart()">Restart Here</button>
+                                <button class="btn btn-warning" onclick="back()">Back to Login</button>
+                            </div>
+                        </center>
+                </div>
+                <br>
+                <br>
+                <label id="errorNotice">Type two numbers and choose an operation</label>
+                <br>
+                <br>
+                <input id="number1" type="number" class="form-control" placeholder="1...">
+                <select id="oper" name="oper" class="form-control">
+                    <option value="+">+</option>
+                    <option value="-">-</option>
+                    <option value="*">*</option>
+                    <option value="/">/</option>
+                </select>
+                <input id="number2" type="number" class="form-control" placeholder="2...">
+                <br>
+                <br>
+                <button id="send" class="btn btn-warning" onclick="send()">Send</button>
+                <br>
+                <br>
+                <br>
+            </center>
+        </div>
+        <script>
+            var player1Name = localStorage.getItem("p1Name");
+            var player2Name = localStorage.getItem("p2Name");
+            var wscore = localStorage.getItem("wscore");
+            var timerT = localStorage.getItem("timerT") * 2 / 2;
+            var timerS = localStorage.getItem("timerS") * 2 / 2;
+            var timerM = localStorage.getItem("timerM") * 2 / 2;
+            console.log(timerM);
+            console.log(timerS);
+            var questionare = 1;
+            var player1Score = 0;
+            var player2Score = 0;
+            var question, answer;
+            document.getElementById("player1Name").innerHTML = player1Name + ": " + player1Score;
+            document.getElementById("player2Name").innerHTML = player2Name + ": " + player2Score;
+            document.getElementById("question").innerHTML = "Question Turn: " + player1Name;
+            document.getElementById("answer").innerHTML = "Answer Turn: " + player2Name;
+
+            function send() {
+                number1 = document.getElementById("number1").value;
+                number2 = document.getElementById("number2").value;
+                oper = document.getElementById("oper").value;
+                if (number1 == "" || number2 == "" || oper == "") {
+                    document.getElementById("errorNotice").className = "text-danger";
+                } else {
+                    document.getElementById("errorNotice").className = "text-white";
+                    question = number1 + " " + oper + " " + number2 + " = ";
+                    if (oper == "+") {
+                        answer = number1 - number2 + (number2 * 2);
+                    } else if (oper == "-") {
+                        answer = number1 - number2;
+                    } else if (oper == "*") {
+                        answer = number1 * number2;
+                    } else if (oper == "/") {
+                        answer = number1 / number2;
+                    }
+                document.getElementById("outputin").style.display = "block";
+                document.getElementById("questionI").innerHTML = question;
+                time = timerT;
+                sec = timerS;
+                min = timerM;
+                setInterval(timer, 1000);
+                }
+            }
+
+            function timer() {
+                if (min == 0 && sec == 0) {
+                    submit()
+                } else if (sec == 0) {
+                    min -= 1;
+                    sec = 59;
+                }
+                if (sec / 10 < 1) {
+                    document.getElementById("timer").innerHTML = "0" + min + " : 0" + sec;
+                } else {
+                    document.getElementById("timer").innerHTML = "0" + min + " : " + sec;
+                }
+                sec--;
+            }
+
+            function submit() {
+                var answerg = document.getElementById("answerg").value;
+                if (answerg == answer) {
+                    if (questionare == 1) {
+                        player2Score += 1;
+                        questionare = 2;
+                    } else {
+                        player1Score += 1;
+                        questionare = 1;
+                    }
+                } else if (answerg < answer || answer < answerg) {
+                    if (questionare == 1) {
+                        player1Score += 1;
+                        questionare = 2;
+                    } else {
+                        player2Score += 1;
+                        questionare = 1;
+                    }
+                }
+                document.getElementById("player1Name").innerHTML = player1Name + ": " + player1Score;
+                document.getElementById("player2Name").innerHTML = player2Name + ": " + player2Score;
+                document.getElementById("outputin").style.display = "none";
+                document.getElementById("answerg").value = "";
+                document.getElementById("number1").value = "";
+                document.getElementById("number2").value = "";
+                document.getElementById("oper").value = "+";
+                if (player1Score == wscore) {
+                    document.getElementById("winDiv").innerHTML = player1Name + " won!";
+                    document.getElementById("end-btn").style.display = "inline-block";
+                } else if (player2Score == wscore) {
+                    document.getElementById("winDiv").innerHTML = player2Name + " won!";
+                    document.getElementById("end-btn").style.display = "inline-block";
+                } else {
+                    if (questionare == 1) {
+                    document.getElementById("answer").innerHTML = "Answer Turn: " + player1Name;
+                    document.getElementById("question").innerHTML = "Question Turn: " + player2Name;
+                    } else {
+                    document.getElementById("question").innerHTML = "Question Turn: " + player2Name;
+                    document.getElementById("answer").innerHTML = "Answer Turn: " + player1Name;
+                    }
+                }
+            }
+
+            function restart() {
+                window.location = "page1.html";
+            }
+
+            function back() {
+                window.location = "index.html";
+            }
+        </script>
+    </body>
+</html>
