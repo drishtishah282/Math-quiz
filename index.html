@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Math Quiz</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <style>
+            .form-control {
+                width: 70%;
+                display: inline-block;
+                margin-left: 10px;
+            }
+            .loginDiv {
+                padding: 10px 10px 15px 10px;
+                display: inline-block;
+            }
+
+            .settingsDiv {
+                padding: 15px; 
+                display: inline-block;
+            }
+
+        </style>
+    </head>
+    <body class=" text-center bg-warning">
+        <div class="container-fluid">
+            <h1 class="text-info">Math Quiz</h1>
+            <br>
+            <h2>Login</h2>
+            <br>
+            <div class="bg-white rounded col-lg-6 col-md-6 col-sm-6 col-xs-12 loginDiv">
+                <h3>Player 1</h3>
+                <label>Player Name: </label><input type="text" id="player1Input" class="form-control" placeholder="John Doe...">
+            </div>
+            <br>
+            <br>
+            <div class="bg-white rounded col-lg-6 col-md-6 col-sm-6 col-xs-12 loginDiv">
+                <h3>Player 2</h3>
+                <label>Player Name: </label><input type="text" id="player2Input" class="form-control" placeholder="Jane Doe...">
+            </div>
+            <br>
+            <br>
+            <div class="bg-white rounded settingsDiv">
+                <label>Winning Score: </label><input type="number" id="wscore" style="width: 100px;" class="form-control" placeholder="10">
+            </div>
+            <br>
+            <br>
+            <div class="bg-white rounded settingsDiv" style="max-width: 200px;">
+                <label>Timer: </label><input type="checkbox" style="margin-left: 9px" id="timerEn" onchange="timerEn()">
+                <br>
+                <input type="number" id="timerM" disabled="true" class="form-control" style="width: 40%; display: inline-block; margin-right: 5px;" placeholder="1" min="0" max="2">
+                <label>:</label>
+                <input type="number" id="timerS" disabled="true" class="form-control" style="width: 40%; display: inline-block; margin-left: 5px;" placeholder="00" min="0" max="59">
+            </div>
+            <br>
+            <label id="errorLabel"></label>
+            <br>
+            <button class="btn btn-info" style="font-size: 17px;" onclick="saveInfo()">Login</button>
+            <br>
+            <br>
+        </div>
+        <script>
+            var player1Name, player2Name;
+
+            function timerEn() {
+                timeEn = document.getElementById("timerEn").checked;
+                timeM = document.getElementById("timerM").value;
+                timeS = document.getElementById("timerS").value;
+                if (timeEn == true) {
+                    document.getElementById("timerM").disabled = false;
+                    document.getElementById("timerS").disabled = false;
+                    if (timeM == "") {
+                        document.getElementById("timerM").value = 1;
+                    }
+                    if (timeS == "") {
+                        document.getElementById("timerS").value = "00";
+                    }
+                } else {
+                    document.getElementById("timerM").disabled = true;
+                    document.getElementById("timerS").disabled = true;
+                    if (timeM != "") {
+                        document.getElementById("timerM").placeholder = document.getElementById("timerM").value;
+                        document.getElementById("timerS").placeholder = document.getElementById("timerS").value;
+                    }
+                }
+            }
+
+            function saveInfo() {
+                wscore = document.getElementById("wscore").value;
+                timeEn = document.getElementById("timerEn").checked;
+                timeM = document.getElementById("timerM").value;
+                timeS = document.getElementById("timerS").value;
+                player1Name = document.getElementById("player1Input").value;
+                player2Name = document.getElementById("player2Input").value;
+                if (player1Name == "" || player2Name == "") {
+                    document.getElementById("errorLabel").innerHTML = "Please enter both names.";
+                } else {
+                    if (wscore == "") {
+                        wscore = 10;
+                    }
+                    if (timeEn == true) {
+                        timerT = (timeM * 60) + (timeS / 2) + (timeS / 2);
+                        localStorage.setItem("timerT", timerT);
+                        localStorage.setItem("timerM", timeM);
+                        localStorage.setItem("timerS", timeS);
+                    }
+                        localStorage.setItem("p1Name", player1Name);
+                        localStorage.setItem("p2Name", player2Name);
+                        localStorage.setItem("wscore", wscore);
+                        window.location = "page1.html";
+                    }
+            }
+        </script>
+    </body>
+</html>
